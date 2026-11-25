@@ -9,7 +9,7 @@ IDIR2 = ../../include
 
 all: backend 
 
-backend: main.c handler.c $(LIB)
+backend: main.c handler.c handler.h $(LIB)
 	$(CC) $(CFLAGS) main.c handler.c -I$(IDIR1) -I$(IDIR2) $(LIB) -o backend
 
 clean:
