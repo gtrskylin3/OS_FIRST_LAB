@@ -5,21 +5,27 @@ CFLAGS ?= -Wall -Wextra
 IDIR = ../include
 LIBDIR = ../build/lib
 
+DEPFLAGS = -MMD -MP
+OBJS = http.o net.o utils.o 
+DEPS = $(OBJS:.o=.d)
+
 all: $(LIBDIR)/libcommon.a
 
-$(LIBDIR)/libcommon.a: http.o net.o utils.o
+$(LIBDIR)/libcommon.a: $(OBJS)
 	mkdir -p $(LIBDIR)
 	ar rcs $@  $^
 
-http.o: http.c $(IDIR)/http.h
-	$(CC) $(CFLAGS) -I$(IDIR) -c http.c -o $@
+http.o: http.c 
+	$(CC) $(CFLAGS) $(DEPFLAGS) -I$(IDIR) -c http.c -o $@
 	
-net.o: net.c $(IDIR)/net.h
-	$(CC) $(CFLAGS) -I$(IDIR) -c net.c -o $@
+net.o: net.c 
+	$(CC) $(CFLAGS) $(DEPFLAGS) -I$(IDIR) -c net.c -o $@
 	
-utils.o: utils.c $(IDIR)/utils.h
-	$(CC) $(CFLAGS) -I$(IDIR) -c utils.c -o $@
-	
+utils.o: utils.c 
+	$(CC) $(CFLAGS) $(DEPFLAGS) -I$(IDIR) -c utils.c -o $@
+
+-include $(DEPS)
+
 clean:
 	rm -f $(LIBDIR)/libcommon.a
-	rm -f net.o http.o utils.o
+	rm -f $(OBJS) $(DEPS)

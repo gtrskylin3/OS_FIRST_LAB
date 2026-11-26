@@ -7,10 +7,23 @@ LIB=../../build/lib/libcommon.a
 IDIR1 = . 
 IDIR2 = ../../include 
 
+DEPFLAGS = -MMD -MP 
+OBJS = main.o router.o 
+DEPS = $(OBJS:.o=.d)
+
 all: balancer
 
-balancer: main.c router.c router.h $(LIB)
-	$(CC) $(CFLAGS) main.c router.c -I$(IDIR1) -I$(IDIR2) $(LIB) -o balancer
+balancer: $(OBJS) $(LIB)
+	$(CC) $(OBJS) $(LIB) -o balancer
+
+main.o: main.c 
+	$(CC) $(CFLAGS) $(DEPFLAGS) -I$(IDIR1) -I$(IDIR2) -c main.c -o $@
+	
+router.o: router.c 
+	$(CC) $(CFLAGS) $(DEPFLAGS) -I$(IDIR1) -I$(IDIR2) -c router.c -o $@	
+
+
+-include $(DEPS)
 
 clean:
-	rm -f balancer 
+	rm -f balancer $(OBJS) $(DEPS)

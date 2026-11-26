@@ -2,6 +2,7 @@
 .gitignore
 build/
 *.o
+*.d
 apps/backend/backend
 apps/balancer/balancer
 apps/loadgen/loadgen
